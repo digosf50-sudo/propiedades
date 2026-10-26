@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Control de Propiedades</title>
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Propiedades"><meta name="theme-color" content="#14302d">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="icon" href="icon-192.png">
+<style>
+:root{--bg:#eef2f0;--sf:#fff;--ink:#14302d;--mu:#5d716e;--ln:#d5dedb;--ac:#0f6b5c;--acT:#fff;--m:#d97706;--l:#0891b2;--i:#7c3aed;--bad:#c2410c;--ok:#15803d;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0e1816;--sf:#162522;--ink:#e3efec;--mu:#93aaa5;--ln:#2a3d39;--ac:#3fb89f;--acT:#08201b;--m:#f59e0b;--l:#22b8d6;--i:#a78bfa;--bad:#fb923c;--ok:#4ade80}}
+*{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.45 'Instrument Sans',system-ui,-apple-system,Segoe UI,sans-serif}
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--ink);color:var(--bg);display:flex;align-items:center;gap:12px;padding:10px 16px;flex-wrap:wrap}
+header h1{font-size:18px;margin:0;flex:1;min-width:150px;letter-spacing:-.01em}
+nav{display:flex;gap:4px}
+nav button{background:transparent;color:inherit;border:0;padding:8px 14px;border-radius:8px;font:inherit;font-weight:600;cursor:pointer;opacity:.75}
+nav button.on{background:var(--bg);color:var(--ink);opacity:1}
+main{max-width:1100px;margin:0 auto;padding:16px}
+h2{font-size:22px;margin:4px 0 14px;letter-spacing:-.02em}h3{font-size:16px;margin:0 0 10px}
+.card{background:var(--sf);border:1px solid var(--ln);border-radius:10px;padding:16px;margin-bottom:16px}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-bottom:16px}
+.stat{background:var(--sf);border:1px solid var(--ln);border-radius:10px;padding:12px 14px;border-left-width:5px}
+.stat b{display:block;font-size:28px;line-height:1.1}.stat span{color:var(--mu);font-size:13px}
+.grid2{display:grid;grid-template-columns:1fr;gap:16px}
+@media(min-width:860px){.grid2.side{grid-template-columns:1.7fr 1fr}}
+button,.btn{font:inherit;cursor:pointer}
+.btn{background:var(--ac);color:var(--acT);border:0;border-radius:8px;padding:9px 16px;font-weight:600}
+.btn.g{background:transparent;color:var(--ink);border:1px solid var(--ln)}.btn.s{padding:5px 10px;font-size:13px}
+.btn.d{background:transparent;color:var(--bad);border:1px solid var(--bad)}
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid var(--ac);outline-offset:1px}
+.bar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:12px}.bar .sp{flex:1}
+.cal-h{display:flex;align-items:center;gap:8px;margin-bottom:8px}.cal-h b{flex:1;text-transform:capitalize;font-size:17px}
+.cal{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:2px}
+.dow{font-size:12px;color:var(--mu);text-align:center;padding:4px 0;font-weight:600}
+.day{min-height:72px;background:var(--bg);border:1px solid transparent;border-radius:6px;padding:3px;text-align:left;color:inherit;overflow:hidden;display:flex;flex-direction:column;gap:2px}
+.day.out{opacity:.4}.day.hoy{border-color:var(--ac);background:var(--sf)}.day.sel{outline:2px solid var(--ink)}
+.day i{font-style:normal;font-size:12px;font-weight:600}
+.chip{font-size:11px;line-height:1.2;color:#fff;border-radius:3px;padding:1px 4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block}
+.chip.done{opacity:.45;text-decoration:line-through}.chip.late{box-shadow:inset 0 0 0 2px var(--bad)}
+.dot{display:none}
+@media(max-width:560px){.day{min-height:52px}.chip{display:none}.dot{display:inline-block;width:7px;height:7px;border-radius:50%;margin:0 1px}.day .dots{line-height:1}}
+.leg{display:flex;gap:12px;flex-wrap:wrap;font-size:12px;color:var(--mu);margin-top:8px}.leg span:before{content:"";display:inline-block;width:10px;height:10px;border-radius:2px;background:var(--c);margin-right:5px}
+.t{display:flex;gap:10px;padding:10px 0;border-top:1px solid var(--ln);align-items:flex-start}.t:first-of-type{border-top:0}
+.t .bd{flex:1;min-width:0}.t .tt{font-weight:600}.t .sm{font-size:13px;color:var(--mu)}
+.tag{display:inline-block;font-size:11px;font-weight:700;color:#fff;border-radius:4px;padding:1px 7px;margin-right:6px}
+.st{font-size:12px;font-weight:700}.st.late{color:var(--bad)}.st.ok{color:var(--ok)}
+.props{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:12px}
+.pc{background:var(--sf);border:1px solid var(--ln);border-radius:10px;padding:14px;cursor:pointer;text-align:left;color:inherit;font:inherit}
+.pc:hover{border-color:var(--ac)}.pc h3{margin:0 0 4px}
+.empty{color:var(--mu);padding:18px;text-align:center;border:1px dashed var(--ln);border-radius:10px}
+dialog{border:0;border-radius:12px;padding:0;background:var(--sf);color:var(--ink);width:min(520px,94vw);max-height:92vh}
+dialog::backdrop{background:rgba(0,0,0,.5)}
+dialog form{padding:18px;display:grid;gap:10px}dialog h3{margin:0}
+label{display:grid;gap:3px;font-size:13px;font-weight:600}label em{color:var(--bad);font-style:normal}
+input,select,textarea{font:inherit;padding:8px 10px;border:1px solid var(--ln);border-radius:8px;background:var(--bg);color:var(--ink);width:100%}
+fieldset{border:1px solid var(--ln);border-radius:8px;padding:10px;display:grid;gap:10px;grid-template-columns:1fr 1fr;margin:0}
+fieldset legend{font-weight:700;font-size:13px;padding:0 6px}fieldset .w{grid-column:1/-1}
+.row{display:flex;gap:8px;justify-content:flex-end;margin-top:4px}
+.tabs{display:flex;gap:4px;margin-bottom:8px}.tabs button{border:1px solid var(--ln);background:transparent;color:var(--ink);border-radius:20px;padding:4px 12px;font-size:13px}.tabs button.on{background:var(--ink);color:var(--bg)}
+.info{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;font-size:14px}.info small{display:block;color:var(--mu);font-size:12px}
+</style>
+</head>
+<body>
+<header><h1>Control de Propiedades</h1>
+<nav><button id="n-dash">Panel</button><button id="n-props">Propiedades</button></nav>
+<button class="btn s" style="background:var(--bg);color:var(--ink)" id="ex">Guardar y exportar</button><button class="btn g s" style="color:inherit;border-color:#ffffff55" id="im">Abrir archivo</button></header>
+<main id="app"></main>
+<dialog id="dlg"><form id="f"></form></dialog>
+<script>
+const TIPOS={mant:{n:'Mantenimiento',c:'var(--m)'},limp:{n:'Limpieza',c:'var(--l)'},insp:{n:'Inspección',c:'var(--i)'}};
+const MES=['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+const iso=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+const today=()=>iso(new Date());
+const fmt=s=>{if(!s)return'';const[y,m,d]=s.split('-');return d+'/'+m+'/'+y};
+let db={props:[],tasks:[]};
+try{const r=JSON.parse(localStorage.getItem('ctrlprop_v1'));if(r&&r.props&&r.tasks)db=r}catch(e){}
+const save=()=>{try{localStorage.setItem('ctrlprop_v1',JSON.stringify(db))}catch(e){}};
+let view='dash',pid=null,cal={dash:newCal(),prop:newCal()},sel={dash:null,prop:null},tab='pend';
+function newCal(){const n=new Date();return{y:n.getFullYear(),m:n.getMonth()}}
+const prop=id=>db.props.find(p=>p.id===id);
+const late=t=>!t.done&&t.fecha<today();
+
+function openDlg(html,cb){const f=$('#f');f.innerHTML=html;f.onsubmit=e=>{e.preventDefault();cb(Object.fromEntries(new FormData(f)));$('#dlg').close()};$('#dlg').showModal()}
+const closeDlg=()=>$('#dlg').close();
+function confirmDlg(msg,cb){openDlg(`<h3>Confirmar</h3><p>${msg}</p><div class="row"><button type="button" class="btn g" onclick="closeDlg()">Cancelar</button><button class="btn d">Eliminar</button></div>`,cb)}
+
+function calendar(key,tasks,showProp){
+  const {y,m}=cal[key],first=new Date(y,m,1),start=(first.getDay()+6)%7,days=new Date(y,m+1,0).getDate();
+  let h=`<div class="cal-h"><button class="btn g s" onclick="mv('${key}',-1)" aria-label="Mes anterior">‹</button><b>${MES[m]} ${y}</b><button class="btn g s" onclick="mv('${key}',1)" aria-label="Mes siguiente">›</button><button class="btn g s" onclick="mv('${key}',0)">Hoy</button></div><div class="cal">`;
+  ['L','M','M','J','V','S','D'].forEach(d=>h+=`<div class="dow">${d}</div>`);
+  for(let i=0;i<42;i++){
+    const d=new Date(y,m,1-start+i),s=iso(d),out=d.getMonth()!==m,ts=tasks.filter(t=>t.fecha===s);
+    h+=`<button class="day${out?' out':''}${s===today()?' hoy':''}${sel[key]===s?' sel':''}" onclick="pick('${key}','${s}')"><i>${d.getDate()}</i>`;
+    ts.slice(0,3).forEach(t=>{const p=prop(t.pid);h+=`<span class="chip${t.done?' done':''}${late(t)?' late':''}" style="background:${TIPOS[t.tipo].c}">${showProp&&p?esc(p.nombre)+': ':''}${esc(t.titulo)}</span>`});
+    if(ts.length>3)h+=`<span class="sm" style="font-size:11px">+${ts.length-3} más</span>`;
+    if(ts.length)h+=`<span class="dots">${ts.map(t=>`<span class="dot" style="background:${TIPOS[t.tipo].c}"></span>`).join('')}</span>`;
+    h+='</button>';
+  }
+  h+='</div><div class="leg">'+Object.values(TIPOS).map(t=>`<span style="--c:${t.c}">${t.n}</span>`).join('')+'<span style="--c:var(--bad)">Vencida</span></div>';
+  return h;
+}
+function mv(k,n){if(!n)cal[k]=newCal();else{let{y,m}=cal[k];m+=n;if(m<0){m=11;y--}if(m>11){m=0;y++}cal[k]={y,m}}render()}
+function pick(k,s){sel[k]=sel[k]===s?null:s;render()}
+
+function taskRow(t,showProp){
+  const p=prop(t.pid),T=TIPOS[t.tipo];
+  const st=t.done?`<span class="st ok">Finalizada el ${fmt(t.done)}</span>`:late(t)?'<span class="st late">Vencida</span>':'<span class="st">Pendiente</span>';
+  return `<div class="t"><div class="bd"><div class="tt"><span class="tag" style="background:${T.c}">${T.n}</span>${esc(t.titulo)}</div>
+  <div class="sm">${showProp&&p?esc(p.nombre)+' · ':''}${fmt(t.fecha)}${t.hora?' '+esc(t.hora):''} · Responsable: ${esc(t.resp||'—')}</div>
+  ${t.notas?`<div class="sm">${esc(t.notas)}</div>`:''}${st}</div>
+  <div style="display:flex;gap:4px;flex-wrap:wrap;justify-content:flex-end">
+  ${t.done?`<button class="btn g s" onclick="reopen('${t.id}')">Reabrir</button>`:`<button class="btn s" onclick="finish('${t.id}')">Finalizar</button>`}
+  <button class="btn g s" onclick="taskForm('${t.id}')">Editar</button><button class="btn g s" onclick="delTask('${t.id}')" aria-label="Eliminar tarea">✕</button></div></div>`;
+}
+
+function renderDash(){
+  const T=db.tasks,pend=T.filter(t=>!t.done),lt=pend.filter(late),hoy=pend.filter(t=>t.fecha===today());
+  const up=pend.slice().sort((a,b)=>a.fecha.localeCompare(b.fecha)).slice(0,8);
+  const s=sel.dash,dayT=s?T.filter(t=>t.fecha===s):[];
+  return `<h2>Panel general</h2><div class="stats">
+  <div class="stat" style="border-left-color:var(--ac)"><b>${db.props.length}</b><span>Propiedades</span></div>
+  <div class="stat" style="border-left-color:var(--m)"><b>${pend.length}</b><span>Tareas pendientes</span></div>
+  <div class="stat" style="border-left-color:var(--bad)"><b>${lt.length}</b><span>Vencidas</span></div>
+  <div class="stat" style="border-left-color:var(--l)"><b>${hoy.length}</b><span>Para hoy</span></div>
+  <div class="stat" style="border-left-color:var(--ok)"><b>${T.length-pend.length}</b><span>Finalizadas</span></div></div>
+  <div class="bar"><button class="btn" onclick="taskForm()" ${db.props.length?'':'disabled'}>+ Nueva tarea</button>${db.props.length?'':'<span class="sm">Primero agrega una propiedad.</span>'}</div>
+  <div class="grid2 side"><div class="card">${calendar('dash',T,true)}
+  ${s?`<h3 style="margin-top:14px">Tareas del ${fmt(s)}</h3>${dayT.length?dayT.map(t=>taskRow(t,true)).join(''):'<div class="sm">Sin tareas este día.</div>'}`:''}</div>
+  <div class="card"><h3>Próximas tareas</h3>${up.length?up.map(t=>taskRow(t,true)).join(''):'<div class="empty">No hay tareas pendientes.</div>'}</div></div>`;
+}
+function renderProps(){
+  return `<h2>Propiedades</h2><div class="bar"><button class="btn" onclick="propForm()">+ Nueva propiedad</button></div>
+  ${db.props.length?`<div class="props">${db.props.map(p=>{const n=db.tasks.filter(t=>t.pid===p.id&&!t.done),l=n.filter(late).length;
+  return `<button class="pc" onclick="openProp('${p.id}')"><h3>${esc(p.nombre)}</h3><div class="sm">${p.whq?'WHQ '+esc(p.whq)+' · ':''}${esc(p.tipo)} · ${esc(p.dir)}</div>
+  <div style="margin-top:8px" class="sm">Encargado: <b>${esc(p.enc.nombre)}</b></div><div style="margin-top:6px"><b>${n.length}</b> pendientes${l?` · <span class="st late">${l} vencidas</span>`:''}</div></button>`}).join('')}</div>`
+  :'<div class="empty">Aún no hay propiedades. Agrega la primera para empezar a programar trabajos.</div>'}`;
+}
+function renderProp(){
+  const p=prop(pid);if(!p){view='props';return renderProps()}
+  const all=db.tasks.filter(t=>t.pid===pid),pend=all.filter(t=>!t.done);
+  const list=(tab==='pend'?pend:tab==='done'?all.filter(t=>t.done):all).slice().sort((a,b)=>a.fecha.localeCompare(b.fecha));
+  const s=sel.prop,dayT=s?all.filter(t=>t.fecha===s):[];
+  return `<div class="bar"><button class="btn g s" onclick="go('props')">‹ Propiedades</button><div class="sp"></div><button class="btn g s" onclick="propForm('${p.id}')">Editar</button><button class="btn d s" onclick="delProp('${p.id}')">Eliminar</button></div>
+  <h2>${esc(p.nombre)}</h2><div class="card"><div class="info">
+  <div><small>Número de WHQ</small><b>${esc(p.whq||'—')}</b></div><div><small>Tipo</small>${esc(p.tipo)}</div><div><small>Dirección</small>${esc(p.dir)}</div><div><small>Número de publicadores</small>${esc(p.pub||'—')}</div><div><small>Pisos de edificio</small>${esc(p.pisos||'—')}</div><div><small>Congregaciones que lo usan</small>${esc(p.congs||'—')}</div><div><small>Congregación de contacto</small>${esc(p.ccon||'—')}</div>
+  <div><small>Encargado</small><b>${esc(p.enc.nombre)}</b></div><div><small>Asignación</small>${esc(p.enc.cargo)}</div><div><small>Teléfono / correo</small>${esc(p.enc.tel)} · ${esc(p.enc.email)}</div>
+  ${p.aux.nombre?`<div><small>Auxiliar</small>${esc(p.aux.nombre)} ${esc(p.aux.tel)}</div>`:''}
+  ${p.notas?`<div><small>Notas</small>${esc(p.notas)}</div>`:''}</div></div>
+  <div class="grid2 side"><div class="card"><h3>Calendario de la propiedad</h3>${calendar('prop',all,false)}
+  ${s?`<h3 style="margin-top:14px">Tareas del ${fmt(s)}</h3>${dayT.length?dayT.map(t=>taskRow(t)).join(''):'<div class="sm">Sin tareas este día.</div>'}`:''}</div>
+  <div class="card"><div class="bar"><h3 style="margin:0">Tareas</h3><div class="sp"></div><button class="btn s" onclick="taskForm(null,'${p.id}')">+ Tarea</button></div>
+  <div class="tabs">${[['pend','Pendientes'],['done','Finalizadas'],['all','Todas']].map(([k,n])=>`<button class="${tab===k?'on':''}" onclick="tab='${k}';render()">${n}</button>`).join('')}</div>
+  ${list.length?list.map(t=>taskRow(t)).join(''):'<div class="empty">Sin tareas en esta lista.</div>'}</div></div>`;
+}
+function render(){
+  $('#n-dash').className=view==='dash'?'on':'';$('#n-props').className=view!=='dash'?'on':'';
+  $('#app').innerHTML=view==='dash'?renderDash():view==='props'?renderProps():renderProp();
+}
+function go(v){view=v;sel.prop=null;render();scrollTo(0,0)}
+function openProp(id){pid=id;view='prop';tab='pend';sel.prop=null;cal.prop=newCal();render();scrollTo(0,0)}
+
+function propForm(id){
+  const p=id?prop(id):{enc:{},aux:{}},v=x=>esc(x||'');
+  openDlg(`<h3>${id?'Editar':'Nueva'} propiedad</h3>
+  <label>Número de WHQ <em>*</em><input name="whq" required value="${v(p.whq)}"></label>
+  <label>Nombre <em>*</em><input name="nombre" required value="${v(p.nombre)}"></label>
+  <label>Tipo <em>*</em><select name="tipo">${[...new Set([p.tipo,'Residencia de SETC','Residencia sin uso','Residencia con uso de congregación','Salón del Reino construido por la organización','Salón del Reino con Hospedaje','Salón del Reino construido anterior al Grupo de Construcción'].filter(Boolean))].map(o=>`<option${p.tipo===o?' selected':''}>${o}</option>`).join('')}</select></label>
+  <label>Dirección <em>*</em><input name="dir" required value="${v(p.dir)}"></label>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px"><label>Número de publicadores<input name="pub" type="number" min="0" inputmode="numeric" value="${v(p.pub)}"></label><label>Pisos de edificio<input name="pisos" type="number" min="1" inputmode="numeric" value="${v(p.pisos)}"></label><label>Número de congregaciones que lo usan<input name="congs" type="number" min="0" inputmode="numeric" value="${v(p.congs)}"></label><label>Congregación de contacto<input name="ccon" value="${v(p.ccon)}"></label></div>
+  <fieldset><legend>Encargado (obligatorio)</legend>
+  <label class="w">Nombre completo <em>*</em><input name="en" required value="${v(p.enc.nombre)}"></label>
+  
+  <label>Asignación <em>*</em><input name="ec" required placeholder="Administrador, conserje…" value="${v(p.enc.cargo)}"></label>
+  <label>Teléfono <em>*</em><input name="et" required type="tel" value="${v(p.enc.tel)}"></label>
+  <label class="w">Correo <em>*</em><input name="ee" required type="email" value="${v(p.enc.email)}"></label></fieldset>
+  <fieldset><legend>Auxiliar (opcional)</legend>
+  <label>Nombre<input name="an" value="${v(p.aux.nombre)}"></label><label>Teléfono<input name="at" type="tel" value="${v(p.aux.tel)}"></label></fieldset>
+  <label>Notas<textarea name="notas" rows="2">${v(p.notas)}</textarea></label>
+  <div class="row"><button type="button" class="btn g" onclick="closeDlg()">Cancelar</button><button class="btn">Guardar</button></div>`,d=>{
+    const o={id:id||uid(),whq:d.whq.trim(),pub:d.pub,pisos:d.pisos,congs:d.congs,ccon:d.ccon.trim(),nombre:d.nombre.trim(),tipo:d.tipo,dir:d.dir.trim(),notas:d.notas,enc:{nombre:d.en.trim(),cargo:d.ec.trim(),tel:d.et.trim(),email:d.ee.trim()},aux:{nombre:d.an.trim(),tel:d.at.trim()}};
+    if(id)db.props[db.props.findIndex(x=>x.id===id)]=o;else db.props.push(o);save();render()});
+}
+function delProp(id){confirmDlg('Se eliminará la propiedad y todas sus tareas. Esta acción no se puede deshacer.',()=>{db.props=db.props.filter(p=>p.id!==id);db.tasks=db.tasks.filter(t=>t.pid!==id);save();go('props')})}
+
+function taskForm(id,fixed){
+  const t=id?db.tasks.find(x=>x.id===id):{pid:fixed||(view==='prop'?pid:db.props[0]?.id),tipo:'mant',fecha:sel[view==='prop'?'prop':'dash']||today()},v=x=>esc(x||'');
+  openDlg(`<h3>${id?'Editar':'Nueva'} tarea</h3>
+  <label>Propiedad <em>*</em><select name="pid" id="tp">${db.props.map(p=>`<option value="${p.id}"${p.id===t.pid?' selected':''}>${esc(p.nombre)}</option>`).join('')}</select></label>
+  <label>Tipo <em>*</em><select name="tipo">${Object.entries(TIPOS).map(([k,o])=>`<option value="${k}"${t.tipo===k?' selected':''}>${o.n}</option>`).join('')}</select></label>
+  <label>Descripción <em>*</em><input name="titulo" required placeholder="Ej. Revisar bomba de agua" value="${v(t.titulo)}"></label>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px"><label>Fecha programada <em>*</em><input type="date" name="fecha" required value="${v(t.fecha)}"></label><label>Hora<input type="time" name="hora" value="${v(t.hora)}"></label></div>
+  <label>Responsable<input name="resp" id="tr" placeholder="Por defecto: el encargado" value="${v(t.resp)}"></label>
+  <label>Notas<textarea name="notas" rows="2">${v(t.notas)}</textarea></label>
+  <div class="row"><button type="button" class="btn g" onclick="closeDlg()">Cancelar</button><button class="btn">Guardar</button></div>`,d=>{
+    const o={id:id||uid(),pid:d.pid,tipo:d.tipo,titulo:d.titulo.trim(),fecha:d.fecha,hora:d.hora,notas:d.notas,done:t.done||null,resp:d.resp.trim()||prop(d.pid).enc.nombre};
+    if(id)db.tasks[db.tasks.findIndex(x=>x.id===id)]=o;else db.tasks.push(o);save();render()});
+}
+function finish(id){const t=db.tasks.find(x=>x.id===id);
+  openDlg(`<h3>Finalizar tarea</h3><p class="sm">${esc(t.titulo)}</p><label>Fecha de finalización <em>*</em><input type="date" name="d" required value="${today()}"></label>
+  <div class="row"><button type="button" class="btn g" onclick="closeDlg()">Cancelar</button><button class="btn">Marcar finalizada</button></div>`,d=>{t.done=d.d;save();render()})}
+function reopen(id){db.tasks.find(x=>x.id===id).done=null;save();render()}
+function delTask(id){confirmDlg('¿Eliminar esta tarea?',()=>{db.tasks=db.tasks.filter(t=>t.id!==id);save();render()})}
+
+function backup(){
+  openDlg(`<h3>Respaldo de datos</h3><p class="sm">Los datos se guardan solo en este navegador. Descarga un respaldo para no perderlos o moverlos a otro equipo.</p>
+  <div class="row" style="justify-content:flex-start"><button type="button" class="btn" id="bx">Descargar respaldo</button></div>
+  <label>Restaurar desde archivo (reemplaza los datos actuales)<input type="file" id="bi" accept=".json"></label>
+  <div class="row"><button type="button" class="btn g" onclick="closeDlg()">Cerrar</button></div>`,()=>{});
+  $('#bx').onclick=()=>{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(db,null,1)],{type:'application/json'}));a.download='propiedades-'+today()+'.json';a.click()};
+  $('#bi').onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{const j=JSON.parse(r.result);if(!Array.isArray(j.props)||!Array.isArray(j.tasks))throw 0;db=j;save();closeDlg();go('dash')}catch(x){alert('El archivo no es un respaldo válido.')}};r.readAsText(f)};
+}
+function toast(m,bad){let t=$('#toast');if(!t){t=document.createElement('div');t.id='toast';t.setAttribute('role','status');t.style.cssText='position:fixed;left:50%;transform:translateX(-50%);bottom:calc(20px + env(safe-area-inset-bottom,0px));z-index:50;padding:10px 16px;border-radius:8px;font-weight:600;max-width:90vw;box-shadow:0 4px 16px rgba(0,0,0,.3)';document.body.appendChild(t)}t.textContent=m;t.style.background=bad?'var(--bad)':'var(--ink)';t.style.color=bad?'#fff':'var(--bg)';t.style.display='block';clearTimeout(t._h);t._h=setTimeout(()=>t.style.display='none',3500)}
+function payload(){return JSON.stringify({app:'control-propiedades',version:1,exportado:new Date().toISOString(),props:db.props,tasks:db.tasks},null,1)}
+async function exportar(){
+  save();const j=payload();let dl=null;
+  try{dl=await window.claude.use('downloads')}catch(e){}
+  if(dl){try{await dl.save({filename:'propiedades-'+today()+'.json',data:j});toast('Archivo guardado. Ábrelo en el otro dispositivo con «Abrir archivo».')}catch(e){if(e&&e.code==='declined')return;copiaManual(j)}}
+  else if(!window.claude)descargaLocal(j);else copiaManual(j);
+}
+function descargaLocal(j){try{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([j],{type:'application/json'}));a.download='propiedades-'+today()+'.json';document.body.appendChild(a);a.click();a.remove();toast('Archivo descargado')}catch(e){copiaManual(j)}
+}
+function copiaManual(j){
+  openDlg(`<h3>Copiar datos</h3><p class="sm">No se pudo descargar el archivo en este dispositivo. Copia este texto, guárdalo en un archivo .json o pégalo en «Abrir archivo» del otro dispositivo.</p><textarea id="cj" rows="8" readonly></textarea><div class="row"><button type="button" class="btn g" onclick="closeDlg()">Cerrar</button><button type="button" class="btn" id="cc">Copiar</button></div>`,()=>{});
+  $('#cj').value=j;$('#cc').onclick=()=>{$('#cj').select();try{document.execCommand('copy');toast('Copiado')}catch(e){}};
+}
+function aplicar(txt){
+  try{const j=JSON.parse(txt);if(!Array.isArray(j.props)||!Array.isArray(j.tasks))throw 0;db={props:j.props,tasks:j.tasks};save();view='dash';sel.dash=null;render();toast('Datos cargados: '+j.props.length+' propiedades y '+j.tasks.length+' tareas')}
+  catch(e){toast('El archivo no es un respaldo válido.',true)}
+}
+function importar(){
+  openDlg(`<h3>Abrir archivo guardado</h3><p class="sm">Selecciona el archivo .json exportado en otro dispositivo. Reemplazará los datos de este dispositivo.</p><label>Archivo<input type="file" id="bi" accept=".json,application/json"></label><label>O pega el contenido<textarea name="t" rows="4"></textarea></label><div class="row"><button type="button" class="btn g" onclick="closeDlg()">Cancelar</button><button class="btn">Abrir pegado</button></div>`,d=>{if(d.t.trim())aplicar(d.t)});
+  $('#bi').onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{closeDlg();aplicar(r.result)};r.readAsText(f)};
+}
+$('#n-dash').onclick=()=>go('dash');$('#n-props').onclick=()=>go('props');$('#ex').onclick=exportar;$('#im').onclick=importar;
+render();
+if('serviceWorker' in navigator&&location.protocol.indexOf('http')===0)navigator.serviceWorker.register('sw.js').catch(()=>{});
+</script>
+</body>
+</html>
